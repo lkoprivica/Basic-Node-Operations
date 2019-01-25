@@ -45,14 +45,15 @@ const commandLibrary = {
     });
   },
   "head": function(fullLine){
-    const fileName = fullLine[];
+    const fileName = fullLine.toString().split("\n");
+      fileName.slice(0,1,2,3,4).join();
     fs.readFile(fileName, (err, data) => {
       if (err) throw err;
       done(data);
     });
   },
   "tail": function(lastLine){
-    const fileName = lastLine[];
+    const fileName = lastLine;
     fs.readFile(fileName, (err, data) => {
       if(err) throw err;
       done(data);
