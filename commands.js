@@ -32,7 +32,6 @@ const errorHandler = function(err){
   if(err) throw err;
     console.log("command not found");
 }
-
 const commandLibrary = {
   "echo": function(userInput){
     done(userInput);
@@ -47,9 +46,11 @@ const commandLibrary = {
   "head": function(fullLine){
     const fileName = fullLine.toString().split("\n");
       fileName.slice(0,1,2,3,4).join();
+
     fs.readFile(fileName, (err, data) => {
       if (err) throw err;
       done(data);
+      
     });
   },
   "tail": function(lastLine){
