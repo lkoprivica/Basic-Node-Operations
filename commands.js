@@ -44,17 +44,19 @@ const commandLibrary = {
     });
   },
   "head": function(fullLine){
-    const fileName = fullLine.toString().split("\n");
-      fileName.slice(0,1,2,3,4).join();
-
+    const fileName = fullLine[0];
     fs.readFile(fileName, (err, data) => {
-      if (err) throw err;
-      done(data);
+      return fileName.split('\n');
       
+      if (err) throw err;
+            done(data);
     });
   },
+
   "tail": function(lastLine){
-    const fileName = lastLine;
+    const fileName = lastLine.toString().split("\n");
+      fileName.slice().join("\n");
+
     fs.readFile(fileName, (err, data) => {
       if(err) throw err;
       done(data);
