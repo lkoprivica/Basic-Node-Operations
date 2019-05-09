@@ -1,6 +1,9 @@
 
 const fs = require("fs");
 
+var lineReader = require('line-by-line');
+
+
 function done(output){
   process.stdout.write(output);
   process.stdout.write('\nprompt >');
@@ -20,8 +23,9 @@ function evaluateCmd(userInput) {
       break;
     case "head":
       commandLibrary.head(userInputArray.slice(1));
+      break;
     case "tail":
-      commandLibrary.head(userInputArray.slice(1));
+      commandLibrary.tail(userInputArray.slice(1));
       break;
     default:
       errorHandler();
@@ -45,22 +49,38 @@ const commandLibrary = {
   },
   "head": function(fullLine){
     const fileName = fullLine[0];
-    fs.readFile(fileName, (err, data) => {
-      return fileName.split('\n');
-      
-      if (err) throw err;
-            done(data);
-    });
-  },
+    let numOfLines = 10;
+    let data = [];
+    let rl = new lineReader(fileName);
 
-  "tail": function(lastLine){
-    const fileName = lastLine.toString().split("\n");
-      fileName.slice().join("\n");
+    rl.on('line', function (line) {
+        data.push(line);
 
-    fs.readFile(fileName, (err, data) => {
-      if(err) throw err;
-      done(data);
+        if(data.length === numOfLines){
+          done(data.join("\n"));
+        }
     })
+       .on('error', function(e){
+         throw e;
+       });
+
+   },
+  "tail": function(lastLine){
+    const fileName = lastLine[0];
+    let numOfLines = 10;
+    let rl = new lineReader(fileName);
+    let data = [];
+
+    rl.on('line', function (line) {
+        data.push(line);
+    })
+    .on('end', function () {
+	     done(data.slice(-1 * numOfLines).join("\n"));
+    })
+    .on('error', function(e){
+      throw e;
+    });
+
   }
 };
   module.exports.commandLibrary = commandLibrary;
